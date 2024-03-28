@@ -14,7 +14,7 @@ from sklearn.compose import make_column_transformer
 from sklearn.feature_selection import RFECV
 from sklearn.metrics import confusion_matrix, classification_report, roc_auc_score, roc_curve
 
-import joblib
+import joblib as jb
 from typing import Union
 
 print("Módulo General Listo Para Usarse \U0001F4BB")
@@ -324,7 +324,7 @@ def models_saver(object:any,filename:str) -> str:
         Guarda el modelo en formato pickle (.pkl)"""
 
     destino = Path(os.getcwd().replace("notebooks","model"))
-    joblib.dump(value=object,filename=destino/f"{filename}.pkl")
+    jb.dump(value=object,filename=destino/f"{filename}.pkl")
     print("Modelo guardado correctamente")
 
 def map(df:pd.DataFrame,loc:str,color:str,names:str,
@@ -430,3 +430,16 @@ def my_rocAuc(y_train,scores):
     plt.axis([0,1,0,1])
     plt.title("ROC-AUC Curve")
     plt.show()
+
+
+def ml_model_manager(name=None,model=None,save=True,path=Path.cwd()):
+
+    full_route = Path(path).joinpath(name + ".joblib")
+
+    if save:
+        jb.dump(model, full_route)
+        print(f"Model {name} saved to {full_route}")
+    else:
+        model = jb.load(full_route)
+        print(f"Model {name} loaded from {full_route}")
+        return model
